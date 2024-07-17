@@ -116,8 +116,35 @@ lashof_joos = pd.DataFrame(lashof_results,
                                   'Equivalence Ratio'])
 
 # Save the dataframes to CSV files
-moura_costa_joos.to_csv(os.path.join(directory_path, 'moura_costa_JOOS.csv'), index=False)
-lashof_joos.to_csv(os.path.join(directory_path, 'lashof_JOOS.csv'), index=False)
+file_name = 'moura_costa_JOOS.csv'
+moura_costa_joos.to_csv(f'{directory_path}\\{file_name}', index=False)
+file_name = 'lashof_JOOS.csv'
+lashof_joos.to_csv(f'{directory_path}\\{file_name}', index=False)
+
+# %% Compute the results for time horizon 100,000 for Lashof method
+time_horizon = 100000
+lashof_results_100k = []
+
+for delay in range(10, 210, 10):
+    if time_horizon < delay:
+        equivalence_ratio = float('nan')
+        costs_Lashof = float('nan')
+        benefits_Lashof = float('nan')
+    else:
+        area_under_UD, error = quad(UD, 0, time_horizon)
+        area_under_UD_DELAYED, error = quad(UD, 0, time_horizon - delay)
+        costs_Lashof = area_under_UD
+        benefits_Lashof = area_under_UD - area_under_UD_DELAYED
+        equivalence_ratio = costs_Lashof / benefits_Lashof
+    lashof_results_100k.append([time_horizon, delay, costs_Lashof, benefits_Lashof, equivalence_ratio])
+
+# Convert results to dataframe and save
+lashof_results_100k = pd.DataFrame(lashof_results_100k,
+                              columns=['Time Horizon (years)', 'Delay (years)', 'Costs (ton-years)', 'Benefits (ton-years)',
+                                       'Equivalence Ratio'])
+file_name = 'lashof_100k.csv'
+lashof_results_100k.to_csv(f'{directory_path}\\{file_name}', index=False)
+
 
 # %%
 '''

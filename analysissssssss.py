@@ -87,10 +87,10 @@ plt.figure(figsize=(12, 8))
 sns.scatterplot(data=results_df, x='Discount Rate', y='Best Time Horizon', hue='Delay', palette='viridis', legend='full')
 plt.title('Scatter Plot of Discount Rate vs. Best Time Horizon')
 plt.xlabel('Discount Rate')
-plt.ylabel('Best Time Horizon')
+plt.ylabel('Time Horizon')
 plt.legend(title='Delay')
 plt.grid(True)
-plt.savefig(f'{directory_path}\\TH_r_delay.png')
+
 plt.show()
 
 # # Plot 3: Discount Rate and Best Time Horizon with jittered data
@@ -100,7 +100,7 @@ plt.show()
 # sns.scatterplot(data=results_df, x='Discount Rate', y='Best Time Horizon', hue='Delay', palette='viridis', legend='full')
 # plt.title('Scatter Plot of Discount Rate vs. Best Time Horizon')
 # plt.xlabel('Discount Rate')
-# plt.ylabel('Best Time Horizon')
+# plt.ylabel('Time Horizon')
 # plt.legend(title='Delay')
 # plt.grid(True)
 # plt.savefig(f'{directory_path}\\TH_r_delay_jittered.png')
@@ -131,7 +131,7 @@ for ax, delay in zip(axes, selected_delays):
     ax.scatter(subset['Discount Rate'], subset['Best Time Horizon'])
     ax.set_title(f'Delay: {delay}')
     ax.set_xlabel('Discount Rate')
-    ax.set_ylabel('Best Time Horizon')
+    ax.set_ylabel('Time Horizon')
     ax.set_ylim(0, 1000)  # Set y-axis limits from 0 to 1000
     ax.grid(True)
     # ax.set_ylim(y_min, y_max)  # Set common y-axis limits
@@ -165,7 +165,7 @@ for ax, discount_rate in zip(axes, selected_discount_rates):
     ax.scatter(subset['Delay'], subset['Best Time Horizon'])
     ax.set_title(f'Discount Rate: {discount_rate}')
     ax.set_xlabel('Delay')
-    ax.set_ylabel('Best Time Horizon')
+    ax.set_ylabel('Time Horizon')
     ax.set_ylim(0, 1000)
     ax.grid(True)
 
