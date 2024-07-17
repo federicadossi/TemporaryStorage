@@ -1,5 +1,6 @@
 # %% Il seguente script crea il grafico della IRF come definita da Joos et al (2013)
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 
