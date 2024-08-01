@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # Definisci la funzione
 def IRF(t):
     return 21.73 + 22.4 * np.exp(-t / 394.4) + 28.24 * np.exp(-t / 36.54) + 27.63 * np.exp(-t / 4.304)
@@ -27,4 +28,10 @@ plt.ylim(0, 1.1)
 plt.legend()
 plt.title('IRF')
 plt.grid(True)
+
+# Salva il grafico nella directory specificata
+directory_path = r'C:\thesis\python'
+file_path = directory_path + r'\fig2.pdf'
+plt.savefig(file_path, bbox_inches='tight')
+# Mostra il grafico
 plt.show()

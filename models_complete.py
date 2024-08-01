@@ -20,10 +20,10 @@ directory_path = r'C:\thesis\python'
 # %% NEW APPROACH ON IRF JOOS 2013
 # Define the equation DD(t): IRF as formulated in Joos et al. (2013)
 def DD(t, t_disc, r):
-    term1 = 21.73 * np.exp(-r * t_disc)
-    term2 = 22.4 * np.exp(-t / 394.4) * np.exp(-r * t_disc)
-    term3 = 28.24 * np.exp(-t / 36.54) * np.exp(-r * t_disc)
-    term4 = 27.63 * np.exp(-t / 4.304) * np.exp(-r * t_disc)
+    term1 = 0.217 * (0.54 * np.exp(-t / 5500) + 0.14 * np.exp(-t / 8200) + 0.32 * np.exp(-t / 200000)) * np.exp(-r * t_disc)
+    term2 = 0.186 * np.exp(-t / 1.186) * np.exp(-r * t_disc)
+    term3 = 0.338 * np.exp(-t / 18.51) * np.exp(-r * t_disc)
+    term4 = 0.259 * np.exp(-t / 172.9) * np.exp(-r * t_disc)
     return term1 + term2 + term3 + term4
 
 # Function to integrate for line 1 (benefit from delayed emission)
@@ -71,7 +71,9 @@ Both MC and Lashof require areas to be finite therefore we adopt time horizons
 
 # Define the UD (Undiscounted Damage) function
 def UD(t):
-    return 21.73 + 22.4 * np.exp(-t / 394.4) + 28.24 * np.exp(-t / 36.54) + 27.63 * np.exp(-t / 4.304)
+    return 0.217 * (0.54 * np.exp(-t / 5500) + 0.14 * np.exp(-t / 8200) + 0.32 * np.exp(-t / 200000)) + \
+        0.186 * np.exp(-t / 1.186) + 0.338 * np.exp(-t / 18.51) + 0.259 * np.exp(-t / 172.9)
+
 
 # Initialize lists to store the results
 moura_costa_results = []
@@ -86,14 +88,14 @@ for time_horizon in range(50, 10000, 50):
             benefits_MC = float('nan')
             equivalence_ratio = float('nan')
         else:
-            benefits_MC = delay * 100  # ton-years
+            benefits_MC = delay  # ton-years
             area_under_UD, error = quad(UD, 0, time_horizon)
             equivalence_ratio = area_under_UD / benefits_MC
         moura_costa_results.append([time_horizon, delay, area_under_UD, benefits_MC, equivalence_ratio])
 
 #%% Vary delay and time horizon for Lashof method
 
-for time_horizon in range(50, 10000, 50):
+for time_horizon in range(50, 10050, 50):
     for delay in range(10, 210, 10):
         if time_horizon < delay:
             equivalence_ratio = float('nan')
@@ -105,7 +107,8 @@ for time_horizon in range(50, 10000, 50):
             costs_Lashof = area_under_UD
             benefits_Lashof = area_under_UD - area_under_UD_DELAYED
             equivalence_ratio = costs_Lashof / benefits_Lashof
-        lashof_results.append([time_horizon, delay, costs_Lashof, benefits_Lashof, equivalence_ratio])
+        # if abs(equivalence_ratio - 70) < 1:  # Tolerance for finding the ratio around 70
+         lashof_results.append([time_horizon, delay, costs_Lashof, benefits_Lashof, equivalence_ratio])
 
 # Convert results to dataframes
 moura_costa_joos = pd.DataFrame(moura_costa_results,
@@ -119,7 +122,7 @@ lashof_joos = pd.DataFrame(lashof_results,
 file_name = 'moura_costa_JOOS.csv'
 moura_costa_joos.to_csv(f'{directory_path}\\{file_name}', index=False)
 file_name = 'lashof_JOOS.csv'
-lashof_joos.to_csv(f'{directory_path}\\{file_name}', index=False)
+# lashof_joos.to_csv(f'{directory_path}\\{file_name}', index=False)
 
 # %% Compute the results for time horizon 100,000 for Lashof method
 time_horizon = 100000
@@ -188,8 +191,8 @@ for time_horizon in range(100, 10000, 200):
             equivalence_ratio = area_under_A / benefits_MC
         moura_costa_results.append([time_horizon, delay, area_under_A, benefits_MC, equivalence_ratio])
 
-# Vary time horizon for Lashof method from 100 to 3000 years (every 200 years) and delays from 10 to 100 (every 10 years)
-for time_horizon in range(100, 10000, 200):
+# Vary time horizon for Lashof method from 100 to 10000 years (every 200 years) and delays from 10 to 100 (every 10 years)
+for time_horizon in range(100, 10200, 200):
     for delay in range(10, 210, 10):
         if time_horizon < delay:
             equivalence_ratio = float('nan')
